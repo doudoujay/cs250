@@ -9,95 +9,37 @@ void memdump(char * p , int len) {
   // Add your code here.
   int ASCII_UPPER = 127;
   int ASCII_LOWER = 32;
-  int i;
-	int j;
-	int s;
-	int a;
-	int b;
-	if(len <= 16){
-		printf("0x%016lX: ",(unsigned long) p);
-		for(s = 0;s<len;s++){
-			int c = *p&0xFF;
-			printf("%02X ",c);
-			p++;
-		}
-		p = p-len;
-		int k;
-		for(k = 0;k< 3*(16-len%16)+1;k++){
-			printf(" ");
-		}
-		for(a = 0;a<len;a++){
-			int d = *p&0xFF;
-			printf("%c",(d>=32 && d<= 127)?d:'.');
-			p++;
-		}
-		printf("\n");
-	}else{
-		for(i = 0;i<len/16;i++){
-			printf("0x%016lX: ",(unsigned long) p);
-			for(j = 0;j<16;j++){
-				int c = *p&0xFF;
-				printf("%02X ",c);
-				p++;
-			}
-			p = p-16;
-			printf(" ");
-			for(b = 0;b<16;b++){
-				int d = *p;
-				printf("%c",(d>=32 && d<= 127)?d:'.');
-				p++;
-			}
-			printf("\n");
-		}
-		if(len%16 != 0){
-			printf("0x016lX: ",(unsigned long) p);
-			for(s = 0;s<len%16;s++){
-				int c = *p&0xFF;
-				printf("%02X ",c);
-				p++;
-			}
-			int k;
-			for(k = 0;k<3*(16-len%16)+1;k++){
-				printf(" ");
-			}
-			p = p - len%16;
-			for(a = 0;a<len%16;a++){
-				int d = *p;
-				printf("%c",(d>=32 && d<= 127)?d:'.');
-			}
-			printf("\n");
-		}
 
-	}
-  // char ans[LINE_WIDTH + 1];
-  // int i;
-  // for(i = 0; i < len; i++) {
-  //   if(i % LINE_WIDTH == 0) {
-  //     printf("0x%016lX: ", (unsigned long)p+i);
-  //   }
-  //   //get the value at p and truncate to one byte
-  //   int c = p[i] & 0xFF;
-  //
-  //   //print first byte as hex
-  //   printf("%02X ", c);
-  //
-  //   //if the char is between 32 and 127 then it is valid ascii other wise it is a .
-  //   ans[i % LINE_WIDTH] = ((c >= ASCII_LOWER && c <= ASCII_UPPER) ? (char)c : '.');
-  //
-  //   if((i + 1) % LINE_WIDTH == 0) {
-  //     ans[i % LINE_WIDTH + 1] = '\0';
-  //     printf(" %s\n", ans);
-  //   }
-  // }
-  //
-  // if(i % LINE_WIDTH != 0) {
-  //   ans[i % LINE_WIDTH] = '\0';
-  //   //add correct padding and then print the leftover string
-  //   for(i = i % LINE_WIDTH; i < LINE_WIDTH; i++) {
-  //     printf("   ");
-  //   }
-  //   printf(" %s\n", ans);
-  // }
+
+  char ans[LINE_WIDTH + 1];
+  int i;
+  for(i = 0; i < len; i++) {
+    if(i % LINE_WIDTH == 0) {
+      printf("0x%016lX: ", (unsigned long)p+i);
+    }
+    //get the value at p and truncate to one byte
+    int c = p[i] & 0xFF;
+
+    //print first byte as hex
+    printf("%02X ", c);
+
+    //if the char is between 32 and 127 then it is valid ascii other wise it is a .
+    ans[i % LINE_WIDTH] = ((c >= ASCII_LOWER && c <= ASCII_UPPER) ? (char)c : '.');
+
+    if((i + 1) % LINE_WIDTH == 0) {
+      ans[i % LINE_WIDTH + 1] = '\0';
+      printf(" %s\n", ans);
+    }
+  }
+
+  if(i % LINE_WIDTH != 0) {
+    ans[i % LINE_WIDTH] = '\0';
+    //add correct padding and then print the leftover string
+    for(i = i % LINE_WIDTH; i < LINE_WIDTH; i++) {
+      printf("   ");
+    }
+    printf(" %s\n", ans);
+  }
 
 }
 
