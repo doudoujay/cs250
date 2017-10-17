@@ -22,14 +22,13 @@ print_pattern: .asciz "%d\n" /*print pattern*/
 
 main:
   /*Read first input*/
-  ldr r0, address_of_scan_pattern
-  ldr r1, address_num_one
-  bl scanf
+  ldr r0, =scan_pattern
+  ldr r1, =num_one
   ldr r4, r1 //store r1 in r4
   ldr r4, [r4] //store val in r4
   /*Read second input*/
-  ldr r0, address_scan_pattern
-  ldr r1, address_num_two
+  ldr r0, =scan_pattern
+  ldr r1, =num_two
   bl scanf
   ldr r5, r1 //store r1 in r5
   ldr r5, [r5] //store val in r5
@@ -56,9 +55,6 @@ print_second:
   ldr r1, r5
   bl print
 
-address_num_one: .word num_one
-address_num_two: .word num_two
-address_scan_pattern: .word scan_pattern
 
 
 
