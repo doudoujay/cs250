@@ -24,7 +24,8 @@ main:
   /*Read first input*/
   ldr r0, =scan_pattern
   ldr r1, =num_one
-  ldr r4, r1 //store r1 in r4
+  bl scanf
+  mov r4, r1 //store r1 in r4
   ldr r4, [r4] //store val in r4
   /*Read second input*/
   ldr r0, =scan_pattern
