@@ -25,40 +25,53 @@ main:
   ldr r0, =scan_pattern
   ldr r1, =num_one
   bl scanf
-  mov r4, r1 //store r1 in r4
-  ldr r4, [r4] //store val in r4
+  
   /*Read second input*/
   ldr r0, =scan_pattern
   ldr r1, =num_two
   bl scanf
-  ldr r5, r1 //store r1 in r5
-  ldr r5, [r5] //store val in r5
+
+  /*load value*/
+  ldr r6, =num_one
+  ldr r4,[r6]
+  
+  /*load value*/
+  ldr r7, =num_two
+  ldr r5, [r7]
 
   /*if else statements*/
   cmp r4, r5
   blt print_second //if r4(first num) is less than r5(second num)
   bl print_first
 
+  
+  
 
+/*Exit*/
+exit:
+  mov r7, $1
+  svc $0
 
 
 /*print the first result*/
 print_first:
   ldr r0, =print_pattern
-  ldr r1, r4
-  bl print
+  mov r1, r4
+  bl printf
+  bl exit
 
 
 
 /*print the second result*/
 print_second:
   ldr r0, =print_pattern
-  ldr r1, r5
-  bl print
-
-
-
+  mov r1, r5
+  bl printf
+  bl exit
 
 /* External */
 .global printf
 .global scanf
+
+
+
