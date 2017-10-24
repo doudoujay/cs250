@@ -30,16 +30,20 @@ exit:
 /*Read inputs from scanf*/
 readInputs:
 	/*Loop control*/
-	sub r3, r3, #1 @r3--
-	cmp r3, #0 @if the loop times goes from 5 to 0
+	sub r5, r5, #1 @r5--
+	cmp r5, #0 @if the loop times goes from 5 to 0
 	blt end @break the loop and branch to sum
 	
 	/*Read from scanf*/
-	ldr r0, =scan_pattern
+	ldr r0, =scan_pattern 
 	ldr r1, =temp
 	bl scanf
 
-	add r4, r4, r1 @r4+=r1
+	/*Load temp value into r8*/
+	ldr r8,=temp
+	ldr r8,[r8]
+
+	add r6, r6, r8 @r4+=r8
 	
 	b readInputs @go back to loop
 	
@@ -47,11 +51,12 @@ readInputs:
 /*print result*/
 end: 
 	ldr r0, =print_pattern
-	mov r1, r4
+	mov r1, r6 @load result to r1
 	bl printf
 	bl exit
 	
 main:
-	mov r3,#2 @load looptimes to control the loop
-	ldr r4, =result @load result value to r4
+	mov r5,#5 @load looptimes to control the loop
+	mov r6,#0 @load result value to r6
 	bl readInputs
+address_of_temp: .word temp
