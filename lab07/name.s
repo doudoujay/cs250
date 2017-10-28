@@ -45,5 +45,8 @@ main:
 
 /*Exit*/
 exit:
+	@Flush out the output
+	mov r0, $0
+	bl fflush
 	mov r7, $1
 	svc $0

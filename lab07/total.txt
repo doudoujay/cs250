@@ -1,0 +1,7 @@
+name < ./tests/test1                : 0   of 10 
+name < ./tests/test2                : 0   of 10 
+compare < ./tests/test3             : 0   of 5  
+compare < ./tests/test4             : 0   of 5  
+compare < ./tests/test5             : 0   of 5  
+compare < ./tests/test6             : 0   of 5  
+compare < ./tests/test7             : 0   of 5  
