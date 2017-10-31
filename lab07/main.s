@@ -12,7 +12,7 @@ print_3: .asciz "Enter the end index: "
 print_result: .asciz "The substring of the given string is '%s'\n"
 
 .balign 4
-input: .word 0
+input: .skip 100 @max input string 100
 
 .balign 4
 scan_string: .asciz "%s" @scan string
