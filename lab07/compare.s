@@ -57,7 +57,7 @@ equal_print:
   mov r1, r4
   mov r2, r5
   bl printf
-  bl exit
+  b exit
 
 less_print:
   @r4 is less than r5
@@ -69,7 +69,7 @@ less_print:
   mov r2, r4
   mov r3, r6
   bl printf
-  bl exit
+  b exit
 
 greater_print:
   @r4 is greater than r5
@@ -81,11 +81,13 @@ greater_print:
   mov r2, r5
   mov r3, r6
   bl printf
-  bl exit
+  b exit
   
 
 
 /*Exit*/
 exit:
+	mov r0,$0
+	bl fflush
 	mov r7, $1
 	svc $0

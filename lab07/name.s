@@ -12,10 +12,10 @@ print_pattern: .asciz "Hello, %s %s.\n"
 scan_pattern: .asciz "%s" @scan the string
 
 .balign 4
-str_1: .word 0
+str_1: .skip 100
 
 .balign 4
-str_2: .word 0
+str_2: .skip 100
 
 .text
 .global main
