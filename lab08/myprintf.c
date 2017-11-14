@@ -8,10 +8,18 @@ void printd(int);
 int myprintf(const char* format, ...){
   // get the base adress
   // parse the %
-  int* pointer = (int*)&format;
+  void** pointer = (void**)&format;
   int i = 0;
-  int argCount = 0;
-  for(i; format[i] != '\0'; i++){
+  char c;
+  for(; (char)format[i] != '\0'; i++){
+ 	while( format[i] != '%' ) { 
+ 	if((char)format[i] == '\0'){
+ 		return 0;
+ 	}
+              putchar(format[i]);
+              i++; 
+    } 
+    i++;
     c = format[i];
     if(c == '%'){
       //print % directly
@@ -19,29 +27,31 @@ int myprintf(const char* format, ...){
     }
     if(c == 'c'){
       //single char
-      pointer = pointer++;
-      putchar(*pointer);
+      //leaves only the least significant byte
+      putchar((unsigned int)(*++pointer) & 0xFF);
     }
     if(c == 's'){
       //string
-      pointer = pointer++;
-      for (int j = 0; (*pointer)[j] != '\0'; j++) {
-        putchar((*pointer)[j]);
+      // the value of pointer is another char pointer
+      // the value of that char pointer is char
+      char* str = *(++pointer);
+      while(*str){
+      	putchar(*str++);
       }
 
     }
     if(c == 'x'){
-      //hex
-      pointer = pointer++;
-      printx(*pointer);
+    	//hex
+      printx((unsigned int)(*++pointer));
+      
 
     }
     if(c == 'd'){
       // decimal
-      pointer = pointer++;
-      printd(*pointer);
+      printd((int)(*++pointer));
 
     }
+    
 
   }
 
