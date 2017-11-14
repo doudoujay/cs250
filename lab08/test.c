@@ -1,4 +1,4 @@
 int myprintf(const char*, ...);
 int main(){
-	myprintf("hello, %d testing\n",123);
+	myprintf("hello, %x testing\n",0);
 }
