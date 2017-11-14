@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <malloc.h>
 #include <stdlib.h>
 #include <time.h>
 #include <unistd.h>
@@ -7,11 +6,24 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <string.h>
+#include <assert.h>
 
 #define READABLE_FILE "file_to_read.txt" /* File to be read during read operations */
 #define BYTES_TO_READ_WRITE 819200 /* 800 KB */
 #define MAX_BUFFER  1048576 /* 1 MB*/
 
+/* Declare a global array of MAX_BUFFER characters named "write_buf" that
+ * will serve as an output buffer.
+ */
+char write_buf[10] = "";
+/* Declare a global character pointer, wp, that will point to a location
+ * in the buffer
+ */
+char* wp;
+/* Declare a global integer, write_buf_size, that stores the size of the
+ * output buffer in use at the current time.
+ */
+int write_buf_size=0;
 /* Function for write without buffer */
 void mywritec(char);
 
@@ -138,38 +150,25 @@ void mywritec(char ch) {
   /* Use the system call write() to write char 'ch' to standard output
    * (file descriptor 1)
    */
-   write(1, ch, 1);
+   write(1, &ch, 1);
 }
-
-/* Use the C preprocessor to define constant MAX_BUFFER to be 1048576.
- * The constant will be the upper-bound on buffer size in this project.
- */
-
-/* Declare a global array of MAX_BUFFER characters named "write_buf" that
- * will serve as an output buffer.
- */
-
-/* Declare a global character pointer, wp, that will point to a location
- * in the buffer
- */
-
-/* Declare a global integer, write_buf_size, that stores the size of the
- * output buffer in use at the current time.
- */
 
 void mywritebufsetup(int n) {
   /* Verify that n is a positive integer less than or equal to MAX_BUFFER, and
    * store n in the global variable write_buf_size.
    */
-
+  assert(n <= MAX_BUFFER);
+  assert(n >= 0);
+  write_buf_size = n;
   /* Initialize wp to point to the first byte of buffer. */
+  wp = write_buf;
 }
 
 
 
 void myputc(char ch) {
   /* Store character ch in the location given by wp, and increment wp. */
-
+  *wp = ch;
   /* If the buffer is full (contains write_buf_size characters), write the
    * entire buffer to standard output using the write() system call and reset
    * wp to the initial location in the buffer.
@@ -177,6 +176,11 @@ void myputc(char ch) {
    * Note that myputc() will be called multiple times before the buffer is
    * completely written out.
    */
+   if (sizeof(write_buf)>=write_buf_size){
+     write(1,write_buf,sizeof(write_buf));
+   }
+   wp = wp-sizeof(write_buf);
+
 }
 
 void mywriteflush(void) {
