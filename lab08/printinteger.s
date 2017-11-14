@@ -1,6 +1,8 @@
 .data
 .balign 4
 hex: .asciz "0123456789ABCDEF"
+.balign 4
+min: .asciz "2147483648"
 
 .text
 .global printd
@@ -59,6 +61,8 @@ printd:
 	bge loop_mod
 	mov r0, #'-'
 	bl putchar
+	cmp r4,#-2147483648
+	beq min_neg
 	neg r4, r4
 	
 
@@ -88,6 +92,7 @@ print_result:
 	cmp r6, #0
 	bne print_result
 	
+	
 	mov sp, fp
 	pop {r4,r5,r6,fp, pc}
 
@@ -113,3 +118,9 @@ s_mod_by_10:
 	sub r0, r4, r1
 	pop {pc}
 
+min_neg:
+	ldr r0, =min
+	bl printf
+	mov sp, fp
+	pop {r4,r5,r6,fp, pc}
+	
