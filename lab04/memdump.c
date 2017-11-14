@@ -15,7 +15,7 @@ void memdump(char * p , int len) {
   int i;
   for(i = 0; i < len; i++) {
     if(i % LINE_WIDTH == 0) {
-      printf("0x%016lX: ", (unsigned long)p+i);
+      printf("0x%08x: ", (unsigned)p+i);
     }
     //get the value at p and truncate to one byte
     int c = p[i] & 0xFF;
@@ -70,6 +70,7 @@ int main() {
   strcpy(str, "Hello world\n");
   printf("&x=0x%x\n", &x.a);
   printf("&y=0x%x\n", &y);
+  printf("&head.next=0x%x\n", &(head->next));
 
   memdump((char *) &x.a, 64);
   head = (struct List *) malloc(sizeof(struct List));
@@ -80,5 +81,12 @@ int main() {
   head->next->next->str = strdup("CS250");
   head->next->next->next = NULL;
   printf("head=0x%x\n", head);
-  memdump((char*) head, 128);
+  memdump((char*) head, 256);
+  int f1 = *(int*)&y;
+  while(f1){
+  	if(f1&1) printf("1");
+  	else printf("0");
+  	f1 >>=1;
+  }
+  printf("\n");
 }
