@@ -15,7 +15,7 @@
 /* Declare a global array of MAX_BUFFER characters named "write_buf" that
  * will serve as an output buffer.
  */
-char write_buf[10] = "";
+char write_buf[MAX_BUFFER];
 /* Declare a global character pointer, wp, that will point to a location
  * in the buffer
  */
@@ -24,6 +24,26 @@ char* wp;
  * output buffer in use at the current time.
  */
 int write_buf_size=0;
+/* Declare a global array of MAX_BUFFER characters named "read_buf" that will
+ * serve as an input buffer.
+ */
+char read_buf[MAX_BUFFER];
+
+/* Declare a global character pointer, rp, that will point to the relevant
+ * location in the buffer.
+ */
+char* rp;
+
+/* Declare a global integer, read_buf_size, that stores the size of the input
+ * buffer currently in use.
+ */
+int read_buf_size = 0;
+
+/* Declare a global integer, read_count, that holds the number of bytes read. */
+int read_count = 0;
+
+/* Global counter*/
+int counter = 0;
 /* Function for write without buffer */
 void mywritec(char);
 
@@ -44,6 +64,8 @@ int fd_write = 1;
 
 /* Declare global variables for read operations here */
 int fd_read;
+
+
 
 /* Main function starts */
 int main()
@@ -150,7 +172,7 @@ void mywritec(char ch) {
   /* Use the system call write() to write char 'ch' to standard output
    * (file descriptor 1)
    */
-   write(1, &ch, 1);
+   write(fd_write, &ch, 1);
 }
 
 void mywritebufsetup(int n) {
@@ -167,8 +189,7 @@ void mywritebufsetup(int n) {
 
 
 void myputc(char ch) {
-  /* Store character ch in the location given by wp, and increment wp. */
-  *wp = ch;
+
   /* If the buffer is full (contains write_buf_size characters), write the
    * entire buffer to standard output using the write() system call and reset
    * wp to the initial location in the buffer.
@@ -176,10 +197,13 @@ void myputc(char ch) {
    * Note that myputc() will be called multiple times before the buffer is
    * completely written out.
    */
-   if (sizeof(write_buf)>=write_buf_size){
-     write(1,write_buf,sizeof(write_buf));
+   if (counter>=write_buf_size){
+     mywriteflush();
    }
-   wp = wp-sizeof(write_buf);
+   /* Store character ch in the location given by wp, and increment wp. */
+	
+	wp[counter] = ch;
+	counter++;
 
 }
 
@@ -187,7 +211,8 @@ void mywriteflush(void) {
   /* Note: this function will be called after all calls to myputc() have been
    * made
    */
-
+	write(fd_write,write_buf,counter);
+	counter = 0;
   /* If any characters remain in the write buffer, write them to standard output */
 }
 
@@ -195,32 +220,32 @@ int myreadc(void) {
   /* Use the read() system call to read a character from the file descriptor
    * specified by 'fd_read'
    */
-
+   	char c;
+	if(read(fd_read, &c, 1) <= 0){
+		return -1;
+	}else{
+		return c;
+	}
+	
   /* If read() indicates end-of-file, return -1 to the caller. Otherwise,
    * return the character that was read in the low-order byte of the integer
    * return value. Be careful to avoid sign extension.
    */
+   
 }
-/* Declare a global array of MAX_BUFFER characters named "read_buf" that will
- * serve as an input buffer.
- */
 
-/* Declare a global character pointer, rp, that will point to the relevant
- * location in the buffer.
- */
-
-/* Declare a global integer, read_buf_size, that stores the size of the input
- * buffer currently in use.
- */
-
-/* Declare a global integer, read_count, that holds the number of bytes read. */
 
 void myreadbufsetup(int n) {
   /* Verify that n is a positive integer less than or equal to MAX_BUFFER, and
    * store n in the global variable read_buf_size.
    */
-
+	assert(n <= MAX_BUFFER);
+	assert(n >= 0);
+	read_buf_size = n;
+	
+	
   /* Set read_count to zero. */
+  	read_count = 0;
 }
 
 int mygetc() {
@@ -228,22 +253,34 @@ int mygetc() {
    * read_buf_size bytes into read_buf from the file descriptor specified by
    * 'fd_read'.
    */
+	if(read_count <= 0){
+		int actualSize = read(fd_read, read_buf, read_buf_size);
+		/* Set read_count to the number of bytes actually read. */
+		read_count = actualSize;
+		rp = read_buf;
+	}
 
-  /* Set read_count to the number of bytes actually read. */
 
   /* Set rp to the first occupied slot in the buffer. If read_count is zero
    * (the read call reached the end-of-file), return -1 to the caller to indicate
    * end-of-file.
    */
+  
+   if(!read_count){
+   	return -1;
+   }
 
   /* Extract the next character from the buffer, increment rp, and decrement
    * read_count.
    */
-
+   char nextChar = *rp++;
+   read_count--;
   /* Return the character extracted from the buffer in the low-order byte of an
    * integer (be careful to avoid sign extension).
    *
    * Note that this function will be called multiple times before the buffer is
    * emptied.
    */
+   return (unsigned char)nextChar;
+   
 }
